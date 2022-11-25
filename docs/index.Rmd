@@ -1,45 +1,76 @@
 ---
-title: "Your A4 Report Title (TODO: Revise title)"
-author: "Your Name"
-date: '2022-11-01'
+title: "Insight into the inequality of the U.S. jail system"
+author: "Yanyi Li"
+date: '2022-11-21'
 output: html_document
 ---
 
 ```{r echo=FALSE, eval=TRUE, message=FALSE}
 source("../source/a4-helpers.R")
 source("../source/analysis.R")
+library(dplyr)
+library(ggplot2)
+library(tidyverse)
+library(ggrepel)
+library(maps)
+library(sf)
+library(scales)
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 ```
+
+![U.S. jail system](https://crosscut.com/sites/default/files/images/articles/prision_health_care_overview_hero-01.jpg)
+[(Credit)](https://crosscut.com/news/2020/08/health-care-wa-prisons-leaves-inmates-waiting-months-or-years-help)
+
 
 ## Abstract 
-[TODO: Include a short abstract (about 50 words)]
-
-# Test (TODO: Remove before submission!!)
-```{r echo=FALSE}
-q1_string <- test_query1()
-num <- 5
-```
-As you know, this is a markdown report. The [R Markdown Cheatsheet](https://www.rstudio.com/wp-content/uploads/2015/02/rmarkdown-cheatsheet.pdf) is **useful!**
-
-* Here's a test of a dynamic variable. Say **"`r q1_string`!!!** 
-* Here's another test. A vector
-of numbers: `r test_query2(num)`.
-
-Recall that _{r echo=TRUE}_ can be used to display the code, 
-which is very useful when developing and debugging a report. Here's an example: 
-
-```{r echo=TRUE}
-num <- 5
-sum <- sum(test_query2(num))
-print(sum)
-```
+This study shows the potential inequality in the U.S jail system by analysis, using dataset collected by the Vera Institute. We have shown by various statistics and graphs, that the U.Ss jail system has some various underlaying problems in inequality, inculding the racial inequality, and the inequality between the states. Also, some states has a perticular high juvenile prison poplutation, which can be also a sign of problem.
 
 ## Introduction 
-[TODO]
-
+One of the sharpest aresa of racism in the US is its jail system. In the jail system, a complex set of social and political structure, including over policing on people with color, and the inequality between states, have led to a situation where the jail system is not only a place of punishment, but also a place of racial discrimination. In this study, we will analyze the data collected by the Vera Institute, and try to find out the inequality in the U.S jail system. The direct stakeholders of this study are the people who are interested in the inequality in the U.S jail system, the law enforcement agencies, and the government. The indirect stakeholders are the people who are interested in the racial inequality in the U.S, and the people who are interested in the inequality between states, and most importantly, the general public. Through this report, we can potentially expose the underlaying problems in the U.S jail system, and hopefully, the government can take actions to solve the problems. The main question we would like the disscuss is: What is the inequality in the U.S jail system, and how each states are different from each other, that has its own set of problems.
+ 
 ## Data Summary 
-[TODO]
+### Summaries:
+- The proportion of black prison population comparing to the whole prison population in 1990: `r get_black_prop_1990()`
+- The proportion of black prison admission comparing to the whole prison admission in 1990: `r get_black_adm_prop_1990()`
+- The proportion of black prison population comparing to the whole prison population in 2010: `r get_black_prop_2010()`
+- The proportion of black prison admission comparing to the whole prison admission in 2010: `r get_black_adm_prop_2010()`<br>
+<br>
+- The proportion of white prison population comparing to the whole prison population in 1990: `r get_white_prop_1990()`
+- The proportion of white prison admission comparing to the whole prison admission in 1990: `r get_white_adm_prop_1990()`
+- The proportion of white prison population comparing to the whole prison population in 2010: `r get_white_prop_2010()`
+- The proportion of white prison admission comparing to the whole prison admission in 2010: `r get_white_adm_prop_2010()`
 
-[TODO ... other sections ... See Canvas for details]
+Here, we can see that during the year 1990 and 2010, the population of black people in the prison are decreasing, from `r get_black_adm_prop_1990()` to `r get_black_adm_prop_2010()`, but the admission rate for black people are instead increasing, from `r get_black_adm_prop_1990()` to `r get_black_adm_prop_2010()`. Comparing to another major group of people, white people, the population of white people in the prison does not change much, from `r get_white_prop_1990()` to `r get_white_prop_2010()`, but the admission rate for white people are also increasing, from `r get_white_adm_prop_1990()` to `r get_white_adm_prop_2010()`. This shows that the one of the inequality of the U.S. jail system, showing more black people are being arrested but being dismissed from the prison, while white people are being arrested and being kept in the prison, which is a sign of racial discrimination both police force and the U.S. jail system.
 
-_All the very best with your work!_
+## Growth of the U.S. Prison Population
+``` {r Section3, echo=FALSE}
+plot(plot_jail_pop_for_us())
+```
+<br>The graph shows the growth of total prison population from year 1970 to 2018.
 
+How does the prison population looks like from year 1970 to 2018? What reasons that causes the increase in prison population? This graphs shows a pattern that the total prison population has been growing since 1970, until 2010. The growth has especially increase during year 1980 to 2010, which afterwards slowly decrease and become more stable. This shows that during the year 1980 till 2010, that may be the time when the U.S. jail system is becoming more and more strict regarding releaseing people out, which may be the reason why the total prison population is increasing. Another factor that may contribute to the increase of the total prison population is the increase of the crime rate, which may be the reason why the total prison population is increasing.
+
+## Growth of Prison Population by State
+``` {r Section4, echo=FALSE}
+plot(plot_jail_pop_by_states(c("WA", "OR", "CA", "NV")))
+```
+<br>The graph shows the growth of prison population in the states of Washington, Oregon, California and Nevada from year 1970 to 2018.
+
+How does the prison population looks like for the West Coast? How does it compare between states? This graphs shows that comparing to the other selected state, the prison population in California is both the largest and the fastest growing. This may be the reason why California is the most populous state in the U.S., and how California has a serious problems regarding crime rate and prison inequality. The reason why here we selected these four states is because these four states are all located in the west coast of the U.S., which is the most populated area in the U.S., and also has similar political and economic background.
+
+## Comparison of Juvenile Prison Population by State in 2018
+``` {r Section5, echo=FALSE}
+plot(plot_juvenile_pop_by_state())
+```
+<br>The graph shows the colleration between the state's juvenile prison population to the state's total population in 2018.
+
+Which state(s) has the most juvenile prison population? And how does it connect with the state's total population? This graph shows that the state with the most juvenile prison population is New York. Other states that has a high proportion of juvenile prison population are North Carolina, Florida, Texas and Georgia. This shows that certain states in the the U.S. has a serious problem regarding juvenile crime rate, and the U.S. jail system is not able to help juvenile not commit a crime again. This may be the reason why the U.S. jail system is becoming more and more strict regarding releaseing people out, which may be the reason why the total prison population is increasing.
+
+## Comparsion between Latinx Jail Population and State's Total Population in 2018
+``` {r Section6, echo=FALSE}
+plot(plot_latinx_pop_by_state())
+```
+<br>This map shows the proportion of Latinx jail population to the state's total prison population in 2018.
+
+Which state(s) has the most Latinx prison population? And how does it connect with the state's total population? This map shows that the state with the most Latinx prison population is California. Other states that has a high proportion of Latinx prison population are Texas and New Mexico. This shows that certain states in the the U.S. has a uniquly high proportion of Latinx prison population, which can shows the problem of racial discrimination and inequality in that perticular state.
